@@ -18,18 +18,21 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 });
 
+// Routes accessible to authenticated users
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [MangaController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Manga browsing
+    // Manga browsing (for all authenticated users)
     Route::get('/manga', [MangaController::class, 'index'])->name('manga.index');
     Route::get('/manga/{id}', [MangaController::class, 'show'])->name('manga.show');
 
-    // Category management
-    Route::get('/categories/create', [CategoryController::class, 'create'])->name('category.create');
-    Route::post('/categories', [CategoryController::class, 'store'])->name('category.store');
-    Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('category.edit');
-    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('category.update');
-    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
+    // Category management (only for admins)
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/categories/create', [CategoryController::class, 'create'])->name('category.create');
+        Route::post('/categories', [CategoryController::class, 'store'])->name('category.store');
+        Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('category.edit');
+        Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('category.update');
+        Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
+    });
 });

@@ -93,16 +93,16 @@
                 <a href="{{ route('home') }}" class="btn-hero-secondary">
                     Start Shopping
                 </a>
-                <a href="{{ route('login') }}" class="btn-hero">
+                <button onclick="openModal('loginModal')" class="btn-hero" style="cursor: pointer; border: none;">
                     Sign In
-                </a>
+                </button>
             </div>
         </div>
     </div>
 </section>
 
 <!-- How It Works / What You Can Do Section -->
-<section class="w-full py-24 md:py-40 border-t-4 border-b-4" style="background-color: white; border-color: var(--gold-outline); margin-top: 0;">
+<section class="w-full py-24 md:py-40" style="background-color: white; margin-top: 0;">
     <div class="mx-auto" style="max-width: 1400px; padding: 5rem 2rem;">
         <div class="text-center mb-24">
             <h2 class="text-4xl md:text-5xl font-bold mb-4" style="color: var(--gold);">
@@ -154,7 +154,7 @@
 </section>
 
 <!-- Why Choose This Website Section -->
-<section class="w-full py-24 md:py-40 my-12 border-t-4 border-b-4" style="background-color: var(--beige); border-color: var(--gold-outline);">
+<section class="w-full py-24 md:py-40 my-12" style="background-color: var(--beige);">
     <div class="mx-auto" style="max-width: 1400px; padding: 5rem 2rem;">
         <h2 class="text-4xl md:text-5xl font-bold text-center mb-20" style="color: var(--gold);">
             Why Choose This Website
@@ -231,7 +231,7 @@
 </section>
 
 <!-- Footer Section -->
-<footer class="footer-section w-full mt-12 border-t-4" style="background-color: #000000; border-color: var(--gold-outline);">
+<footer class="footer-section w-full mt-12" style="background-color: #000000;">
     <div class="footer-container">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
             <!-- Website Info -->
@@ -252,8 +252,8 @@
                         <li><a href="{{ route('orders.index') }}" style="color: white; opacity: 0.9;" onmouseover="this.style.opacity='1'; this.style.color='var(--gold)'" onmouseout="this.style.opacity='0.9'; this.style.color='white'" class="transition-all">My Orders</a></li>
                         <li><a href="{{ route('cart.index') }}" style="color: white; opacity: 0.9;" onmouseover="this.style.opacity='1'; this.style.color='var(--gold)'" onmouseout="this.style.opacity='0.9'; this.style.color='white'" class="transition-all">Cart</a></li>
                     @else
-                        <li><a href="{{ route('login') }}" style="color: white; opacity: 0.9;" onmouseover="this.style.opacity='1'; this.style.color='var(--gold)'" onmouseout="this.style.opacity='0.9'; this.style.color='white'" class="transition-all">Login</a></li>
-                        <li><a href="{{ route('register') }}" style="color: white; opacity: 0.9;" onmouseover="this.style.opacity='1'; this.style.color='var(--gold)'" onmouseout="this.style.opacity='0.9'; this.style.color='white'" class="transition-all">Register</a></li>
+                        <li><a onclick="openModal('loginModal')" style="color: white; opacity: 0.9; cursor: pointer;" onmouseover="this.style.opacity='1'; this.style.color='var(--gold)'" onmouseout="this.style.opacity='0.9'; this.style.color='white'" class="transition-all">Login</a></li>
+                        <li><a onclick="openModal('registerModal')" style="color: white; opacity: 0.9; cursor: pointer;" onmouseover="this.style.opacity='1'; this.style.color='var(--gold)'" onmouseout="this.style.opacity='0.9'; this.style.color='white'" class="transition-all">Register</a></li>
                     @endauth
                 </ul>
             </div>
@@ -265,9 +265,9 @@
                     Join thousands of manga enthusiasts and start building your collection today.
                 </p>
                 @guest
-                    <a href="{{ route('register') }}" class="inline-block px-6 py-2 rounded-lg font-semibold transition-all hover:scale-105" style="background-color: var(--gold); color: var(--text-dark); border: 2px solid var(--gold-outline);" onmouseover="this.style.backgroundColor='var(--dark-gold)'" onmouseout="this.style.backgroundColor='var(--gold)'">
+                    <button onclick="openModal('registerModal')" class="inline-block px-6 py-2 rounded-lg font-semibold transition-all hover:scale-105" style="background-color: var(--gold); color: var(--text-dark); border: 2px solid var(--gold-outline); cursor: pointer;" onmouseover="this.style.backgroundColor='var(--dark-gold)'" onmouseout="this.style.backgroundColor='var(--gold)'">
                         Sign Up Now
-                    </a>
+                    </button>
                 @endguest
             </div>
         </div>

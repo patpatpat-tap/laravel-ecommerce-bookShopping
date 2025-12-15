@@ -3,97 +3,251 @@
 @section('title', 'Shopping Cart')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h1 class="text-3xl font-bold mb-6">Shopping Cart</h1>
+<style>
+    .product-hero-header {
+        background: linear-gradient(135deg, var(--gold) 0%, var(--dark-gold) 100%);
+        padding: 1.4rem 2rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1100;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    .product-hero-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+    }
+    .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: white;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 1.2rem;
+    }
+    .logo-icon {
+        width: 3.5rem;
+        height: 3.5rem;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        color: white;
+    }
+    .logo-icon:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    .logo-text {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: white;
+    }
+    .hero-actions {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        color: white;
+        font-weight: 700;
+    }
+    .hero-pill {
+        background: rgba(255, 255, 255, 0.18);
+        padding: 0.55rem 0.9rem;
+        border-radius: 999px;
+    }
+    .cart-icon-wrapper {
+        position: relative;
+        cursor: pointer;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+    .cart-icon-wrapper:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+    .cart-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: var(--red);
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: bold;
+    }
+    .page-spacer {
+        height: 120px;
+    }
+</style>
+
+<div class="product-hero-header">
+    <div class="product-hero-container">
+        <a href="{{ route('dashboard') }}" class="logo-section">
+            <div class="logo-icon">
+                <svg style="width: 2rem; height: 2rem; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                </svg>
+            </div>
+            <span class="logo-text">Manga Shop</span>
+        </a>
+        <div class="hero-actions">
+            <a href="{{ route('cart.index') }}" class="cart-icon-wrapper">
+                <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <span>Cart</span>
+                @auth
+                    @if(auth()->user()->cart && auth()->user()->cart->items->count() > 0)
+                        <span class="cart-badge">{{ auth()->user()->cart->items->sum('quantity') }}</span>
+                    @endif
+                @endauth
+            </a>
+            @auth
+                <div class="hero-pill">{{ auth()->user()->name }}</div>
+            @else
+                <a href="{{ route('login') }}" style="color: white; text-decoration: none;">Login</a>
+            @endauth
+        </div>
+    </div>
+</div>
+
+<div class="page-spacer"></div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+    <div class="mb-6">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-1">Shopping Cart</h1>
+        <p class="text-sm text-gray-500">Review your selected mangas before checkout.</p>
+    </div>
 
     @if($cart->items->count() > 0)
-        <div class="bg-white rounded-lg shadow overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach($cart->items as $item)
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-16 w-16">
-                                        @if($item->product->image)
-                                            <img src="{{ $item->product->image }}" alt="{{ $item->product->name }}" class="h-16 w-16 object-cover rounded">
-                                        @else
-                                            <div class="h-16 w-16 bg-gray-200 rounded flex items-center justify-center">
-                                                <span class="text-gray-400 text-xs">No Image</span>
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">{{ $item->product->name }}</div>
-                                        <div class="text-sm text-gray-500">{{ $item->product->category->name }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                ${{ number_format($item->price, 2) }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <form method="POST" action="{{ route('cart.update', $item) }}" class="inline">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" max="{{ $item->product->stock }}" 
-                                        class="w-20 px-2 py-1 border border-gray-300 rounded text-sm" onchange="this.form.submit()">
-                                </form>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                ${{ number_format($item->subtotal, 2) }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <form method="POST" action="{{ route('cart.remove', $item) }}" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900">Remove</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+        @php
+            $subtotal = $cart->total_price;
+            $discount = 0;
+            $delivery_fee = 0;
+            $total = $subtotal - $discount + $delivery_fee;
+        @endphp
 
-        <div class="mt-6 bg-white rounded-lg shadow p-6">
-            <div class="flex justify-between items-center mb-4">
-                <span class="text-lg font-semibold">Total Items:</span>
-                <span class="text-lg">{{ $cart->total_items }}</span>
+        <div class="grid lg:grid-cols-3 gap-8 items-start">
+            <!-- Left: Cart items -->
+            <div class="lg:col-span-2 space-y-4">
+                @foreach($cart->items as $item)
+                    <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
+                        <div class="flex items-center gap-4">
+                            <!-- Manga Image (adapted from medicine image UI) -->
+                            <div class="w-20 h-20 bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
+                                @if($item->product?->image)
+                                    <img
+                                        src="{{ $item->product->image }}"
+                                        alt="{{ $item->product->name }}"
+                                        class="w-full h-full object-cover rounded-xl">
+                                @else
+                                    <div class="text-teal-400 text-2xl font-bold">
+                                        {{ mb_substr($item->product?->name ?? 'MG', 0, 2) }}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <!-- Manga Details (adapted from medicine details UI) -->
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">
+                                    {{ $item->product?->name }}
+                                </h3>
+                                <p class="text-sm text-gray-500 mb-2">
+                                    {{ $item->product?->author }}
+                                    {!! $item->product?->publisher ? ' · '.$item->product->publisher : '' !!}
+                                </p>
+
+                                @if($item->product?->category)
+                                    <span class="inline-block px-2 py-1 bg-teal-100 text-teal-700 text-xs font-medium rounded-full">
+                                        {{ $item->product->category->name }}
+                                    </span>
+                                @endif
+                            </div>
+
+                            <!-- Quantity and Price (static, like reference UI) -->
+                            <div class="text-right">
+                                <div class="text-sm text-gray-500 mb-1">
+                                    Quantity: {{ $item->quantity }}
+                                </div>
+                                <div class="text-sm text-gray-500 mb-2">
+                                    ₱{{ number_format($item->price, 2) }} each
+                                </div>
+                                <div class="text-xl font-bold text-teal-600">
+                                    ₱{{ number_format($item->subtotal, 2) }}
+                                </div>
+                            </div>
+
+                            <!-- Remove Button with icon + confirm -->
+                            <form action="{{ route('cart.remove', $item) }}" method="POST" class="ml-4">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                        class="text-red-500 hover:text-red-700 transition-colors duration-200"
+                                        onclick="return confirm('Remove this manga from cart?')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
             </div>
-            <div class="flex justify-between items-center mb-6">
-                <span class="text-xl font-bold">Total Price:</span>
-                <span class="text-2xl font-bold text-indigo-600">${{ number_format($cart->total_price, 2) }}</span>
-            </div>
-            <div class="flex space-x-4">
-                <a href="{{ route('home') }}" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
-                    Continue Shopping
-                </a>
-                <a href="{{ route('checkout') }}" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-                    Proceed to Checkout
-                </a>
-                <form method="POST" action="{{ route('cart.clear') }}" class="inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-                        Clear Cart
-                    </button>
-                </form>
+
+            <!-- Right: Order Summary (integrated from reference design) -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Order Summary</h2>
+
+                    <!-- Price Breakdown -->
+                    <div class="space-y-6 mb-6">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Subtotal</span>
+                            <span>₱{{ number_format($subtotal, 2) }}</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Discount</span>
+                            <span class="text-emerald-600">-₱{{ number_format($discount, 2) }}</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Delivery Fee</span>
+                            <span>₱{{ number_format($delivery_fee, 2) }}</span>
+                        </div>
+                        <hr class="border-gray-200">
+                        <div class="flex justify-between text-lg font-semibold text-gray-900">
+                            <span>Total</span>
+                            <span>₱{{ number_format($total, 2) }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Checkout Button -->
+                    <a href="{{ route('checkout') }}"
+                       class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-lg text-center transition-all duration-200 hover:scale-105">
+                        <i class="fas fa-credit-card mr-2"></i>Proceed to Checkout
+                    </a>
+                </div>
             </div>
         </div>
     @else
-        <div class="bg-white rounded-lg shadow p-12 text-center">
+        <div class="bg-white rounded-2xl shadow p-12 text-center">
             <p class="text-gray-500 text-lg mb-4">Your cart is empty.</p>
-            <a href="{{ route('home') }}" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 inline-block">
+            <a href="{{ route('home') }}" class="px-6 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 inline-block">
                 Start Shopping
             </a>
         </div>

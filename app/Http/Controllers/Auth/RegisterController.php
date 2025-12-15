@@ -21,7 +21,7 @@ class RegisterController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
@@ -33,6 +33,17 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('home')->with('success', 'Registration successful!');
+        // New users are always regular users (not admin), so redirect to user dashboard
+        $redirectRoute = route('dashboard');
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Registration successful!',
+                'redirect' => $redirectRoute
+            ]);
+        }
+
+        return redirect($redirectRoute)->with('success', 'Registration successful!');
     }
 }

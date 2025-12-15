@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
         // Run seeders in order
         $this->call([
             AdminUserSeeder::class,  // Create admin user first
-            CategorySeeder::class,    // Create categories second (products need categories)
-            ProductSeeder::class,     // Create products last (depends on categories)
+            CategorySeeder::class,    // Create categories second (manga need categories)
+            MangaSeeder::class,       // Create all manga including Jujutsu Kaisen (depends on categories)
         ]);
     }
 }

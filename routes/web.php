@@ -16,14 +16,21 @@ Route::get('/shop', [HomeController::class, 'index'])->name('home');
 
 // Authentication routes
 Route::middleware('guest')->group(function () {
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::get('/register', function () {
+        return redirect()->route('landing');
+    })->name('register');
     Route::post('/register', [RegisterController::class, 'register']);
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::get('/login', function () {
+        return redirect()->route('landing');
+    })->name('login');
     Route::post('/login', [LoginController::class, 'login']);
 });
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    // User Dashboard
+    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     // Product show (public but requires auth for cart)
     Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
